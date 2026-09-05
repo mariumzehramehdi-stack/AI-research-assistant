@@ -4,66 +4,59 @@ An agentic AI research assistant that searches the web, retrieves relevant sourc
 
 ## Overview
 
-**AI Research Assistant** automates the research workflow by combining web search, source processing, and large language models.
+AI Research Assistant is an agentic research system that combines live web search with large language models to automate the research workflow.
 
-The system retrieves live information from the web using **Tavily Search API**, processes the retrieved sources, and uses **Google Gemini** to generate structured research findings and reports grounded in the collected sources.
+The system accepts a research query, retrieves relevant information using the Tavily Search API, processes the retrieved sources, and uses Google Gemini to synthesize the findings into a structured, source-grounded research report.
 
 ## Features
 
-* Web Research — Retrieves relevant and up-to-date sources using Tavily.
-* LLM-Powered Analysis — Uses Google Gemini to analyze and synthesize information.
-* Source-Grounded Responses — Connects generated findings to retrieved sources.
-* Automated Reports — Generates structured research reports from collected information.
-* Agentic Workflow — Coordinates search, analysis, summarization, and report generation.
-* FastAPI Backend — Provides an API for running the research workflow.
-* Web Interface — Simple frontend for submitting research queries.
-* Docker Support — Containerized setup for consistent deployment.
+* **Web Research** — Retrieves relevant and up-to-date information from the web using Tavily.
+* **LLM-Powered Analysis** — Uses Google Gemini to analyze and synthesize retrieved information.
+* **Source-Grounded Responses** — Grounds generated findings in retrieved sources to improve factual reliability.
+* **Automated Reports** — Generates structured research reports from collected sources.
+* **Agentic Workflow** — Coordinates search, source processing, summarization, and final synthesis.
+* **FastAPI Backend** — Provides an API layer for running the research pipeline.
+* **Web Interface** — Simple browser-based interface for submitting research queries.
+* **Dockerized Deployment** — Containerized with Docker for consistent and reproducible execution.
 
 ## Architecture
 
 ```text
 User Query
-    |
-    v
-FastAPI Application
-    |
-    v
+    ↓
+FastAPI
+    ↓
 Agent Loop
-    |
-    +----> Tavily Web Search
-    |          |
-    |          v
-    |     Relevant Sources
-    |
-    v
+    ↓
+Tavily Web Search
+    ↓
+Relevant Sources
+    ↓
 Source Summarization
-    |
-    v
+    ↓
 Google Gemini
-    |
-    v
+    ↓
 Research Synthesis
-    |
-    v
+    ↓
 Citation-Grounded Report
 ```
 
 ## Tech Stack
 
-| Technology          | Purpose                            |
-| ------------------- | ---------------------------------- |
-| Python              | Core application                   |
-| FastAPI             | Backend API                        |
-| Google Gemini       | LLM-powered research and synthesis |
-| Tavily Search API   | Web search and source retrieval    |
-| Docker              | Containerization                   |
-| HTML/CSS/JavaScript | Frontend                           |
+| Technology          | Purpose                                |
+| ------------------- | -------------------------------------- |
+| Python              | Core application and research pipeline |
+| FastAPI             | Backend API                            |
+| Google Gemini       | LLM-powered analysis and synthesis     |
+| Tavily Search API   | Web search and source retrieval        |
+| HTML/CSS/JavaScript | Web interface                          |
+| Docker              | Application containerization           |
 
 ## Project Structure
 
 ```text
 AI-research-assistant/
-|
+│
 ├── agent_loop.py
 ├── basicllm_test.py
 ├── build_report.py
@@ -71,6 +64,9 @@ AI-research-assistant/
 ├── search.py
 ├── summarize_sources.py
 ├── index (1).html
+├── requirements.txt
+├── Dockerfile
+├── .dockerignore
 ├── .gitignore
 └── README.md
 ```
@@ -90,19 +86,27 @@ cd AI-research-assistant
 python -m venv venv
 ```
 
-Activate it on Windows:
+### 3. Activate the environment
+
+**Windows:**
 
 ```bash
 venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+**macOS/Linux:**
+
+```bash
+source venv/bin/activate
+```
+
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure API keys
+### 5. Configure environment variables
 
 Create a `.env` file in the project root:
 
@@ -111,50 +115,82 @@ GEMINI_API_KEY=your_gemini_api_key
 TAVILY_API_KEY=your_tavily_api_key
 ```
 
-**Never commit your `.env` file or expose API keys publicly.**
+Never commit API keys or `.env` files to the repository.
 
-### 5. Run the application
+### 6. Run locally
 
 ```bash
 uvicorn main:app --reload
 ```
 
-The API will be available locally through the FastAPI server.
+The application will be available at:
+
+```text
+http://localhost:8000
+```
+
+## Docker
+
+The application is containerized using Docker.
+
+### Build the Docker image
+
+```bash
+docker build -t ai-research-assistant .
+```
+
+### Run the container
+
+```bash
+docker run --env-file .env -p 8000:8000 ai-research-assistant
+```
+
+The application will then be available at:
+
+```text
+http://localhost:8000
+```
 
 ## Research Workflow
 
-1. User submits a research question.
-2. The agent determines the required research steps.
-3. Tavily searches the web for relevant sources.
-4. Retrieved sources are processed and summarized.
-5. Gemini synthesizes the information.
-6. Findings are grounded in the retrieved sources.
-7. A structured research report is generated.
+1. User submits a research query.
+2. The agent initiates a web search through Tavily.
+3. Relevant sources are collected and processed.
+4. Source content is summarized.
+5. Google Gemini analyzes the retrieved information.
+6. The findings are synthesized into a structured report.
+7. Retrieved sources are included to support the generated research.
 
 ## Use Cases
 
-* Academic research
-* Technology research
-* Market research
+* Research assistance
+* Technical research
 * Topic exploration
-* Source comparison
-* Rapid information gathering
+* Information synthesis
+* Source-grounded AI responses
+* Automated research reporting
 
 ## Security
 
-API credentials are stored locally using environment variables and are excluded from Git using `.gitignore`.
+* API keys are stored in environment variables.
+* `.env` is excluded from version control.
+* Local cache files are excluded from the Docker build context.
+* Secrets should never be hardcoded or committed to the repository.
 
 ## Future Improvements
 
-* Add multi-agent research planning
-* Improve source ranking and relevance
-* Add persistent research history
+* Add conversation memory
+* Improve source ranking and relevance filtering
+* Add additional research agents
 * Add streaming responses
-* Deploy the application publicly
-* Add automated evaluation of research quality
+* Improve report formatting
+* Deploy the containerized application to a cloud platform
+* Add automated testing and CI/CD
 
 ## Author
 
-**Mariam Zehra **
-
+**Mariam Zehra**
 Computer Science Student | AI/ML | Python
+ 
+
+   
