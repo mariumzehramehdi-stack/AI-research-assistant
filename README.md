@@ -155,6 +155,6 @@ API credentials are stored locally using environment variables and are excluded 
 
 ## Author
 
-**Marium Zehra Mehdi**
+**Mariam Zehra Mehdi**
 
 Computer Science Student | AI/ML | Python
