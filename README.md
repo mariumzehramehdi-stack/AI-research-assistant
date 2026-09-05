@@ -1,7 +1,5 @@
-# AI Research Assistant
-
-An agentic AI research assistant that searches the web, retrieves relevant sources, summarizes findings, and generates citation-grounded research reports.
-
+ ![AI Research Assistant Demo](screenshots/research-demo.png)
+ 
 ## Overview
 
 AI Research Assistant is an agentic research system that combines live web search with large language models to automate the research workflow.
