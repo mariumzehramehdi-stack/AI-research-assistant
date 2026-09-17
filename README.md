@@ -1,25 +1,36 @@
  ![AI Research Assistant Demo](screenshots/research-demo.png)
- 
-## Overview
 
-AI Research Assistant is an agentic research system that combines live web search with large language models to automate the research workflow.
+ AI Research Assistant (Sift)
 
-The system accepts a research query, retrieves relevant information using the Tavily Search API, processes the retrieved sources, and uses Google Gemini to synthesize the findings into a structured, source-grounded research report.
+Most "AI research assistant" projects generate a confident-sounding answer whether or not they actually found good evidence for it. This one doesn't — it checks its own sources before writing anything, and it goes back to search again if what it found isn't good enough.
 
-## Features
+Overview
 
-* **Web Research** — Retrieves relevant and up-to-date information from the web using Tavily.
-* **LLM-Powered Analysis** — Uses Google Gemini to analyze and synthesize retrieved information.
-* **Source-Grounded Responses** — Grounds generated findings in retrieved sources to improve factual reliability.
-* **Automated Reports** — Generates structured research reports from collected sources.
-* **Agentic Workflow** — Coordinates search, source processing, summarization, and final synthesis.
-* **FastAPI Backend** — Provides an API layer for running the research pipeline.
-* **Web Interface** — Simple browser-based interface for submitting research queries.
-* **Dockerized Deployment** — Containerized with Docker for consistent and reproducible execution.
+Sift is an agentic research system that combines live web search with an LLM to automate the research workflow end to end. You give it a query, it retrieves sources through the Tavily Search API, evaluates whether those sources are actually sufficient to answer the question, searches again on its own if they're not, and then uses Google Gemini to synthesize the findings into a structured, citation-grounded report.
 
-## Architecture
+Results
 
-```text
+I didn't just assume this works — I manually checked it.
+
+What I checked	Result
+Reports manually reviewed for citation accuracy	8
+Unsupported or miscited claims found	0
+Sources manually confirmed as genuinely relevant	16 / 16
+Topics where the follow-up search actually triggered	67%
+Average end-to-end response time	18–19 seconds
+
+The follow-up search rate matters most here — on two out of three tested topics, the first search round wasn't good enough on its own, and the agent caught that instead of answering anyway.
+
+Features
+Web Research — retrieves relevant, up-to-date information from the web using Tavily
+Self-Evaluation — checks whether retrieved sources are sufficient before generating an answer, and triggers a targeted follow-up search if they aren't
+LLM-Powered Analysis — uses Google Gemini to analyze and synthesize retrieved information
+Source-Grounded Responses — constrains generated claims to what was actually retrieved, verified by hand across 8 full reports
+Automated Reports — generates structured research reports from collected sources
+FastAPI Backend — provides an API layer for running the research pipeline
+Web Interface — simple browser-based interface for submitting research queries
+Dockerized Deployment — containerized for consistent, reproducible execution
+Architecture
 User Query
     ↓
 FastAPI
@@ -28,7 +39,9 @@ Agent Loop
     ↓
 Tavily Web Search
     ↓
-Relevant Sources
+Source Sufficiency Check ──[insufficient]──▶ Follow-up Search
+    │
+  [sufficient]
     ↓
 Source Summarization
     ↓
@@ -37,22 +50,15 @@ Google Gemini
 Research Synthesis
     ↓
 Citation-Grounded Report
-```
-
-## Tech Stack
-
-| Technology          | Purpose                                |
-| ------------------- | -------------------------------------- |
-| Python              | Core application and research pipeline |
-| FastAPI             | Backend API                            |
-| Google Gemini       | LLM-powered analysis and synthesis     |
-| Tavily Search API   | Web search and source retrieval        |
-| HTML/CSS/JavaScript | Web interface                          |
-| Docker              | Application containerization           |
-
-## Project Structure
-
-```text
+Tech Stack
+Technology	Purpose
+Python	Core application and research pipeline
+FastAPI	Backend API
+Google Gemini	LLM-powered analysis and synthesis
+Tavily Search API	Web search and source retrieval
+HTML/CSS/JavaScript	Web interface
+Docker	Application containerization
+Project Structure
 AI-research-assistant/
 │
 ├── agent_loop.py
@@ -61,125 +67,76 @@ AI-research-assistant/
 ├── main.py
 ├── search.py
 ├── summarize_sources.py
-├── index (1).html
+├── index.html
 ├── requirements.txt
 ├── Dockerfile
 ├── .dockerignore
 ├── .gitignore
 └── README.md
-```
-
-## Setup
-
-### 1. Clone the repository
-
-```bash
+Setup
+1. Clone the repository
 git clone https://github.com/mariumzehramehdi-stack/AI-research-assistant.git
 cd AI-research-assistant
-```
-
-### 2. Create a virtual environment
-
-```bash
+2. Create a virtual environment
 python -m venv venv
-```
+3. Activate the environment
 
-### 3. Activate the environment
+Windows:
 
-**Windows:**
-
-```bash
 venv\Scripts\activate
-```
 
-**macOS/Linux:**
+macOS/Linux:
 
-```bash
 source venv/bin/activate
-```
-
-### 4. Install dependencies
-
-```bash
+4. Install dependencies
 pip install -r requirements.txt
-```
+5. Configure environment variables
 
-### 5. Configure environment variables
+Create a .env file in the project root:
 
-Create a `.env` file in the project root:
-
-```env
 GEMINI_API_KEY=your_gemini_api_key
 TAVILY_API_KEY=your_tavily_api_key
-```
 
-Never commit API keys or `.env` files to the repository.
+Never commit API keys or .env files to the repository.
 
-### 6. Run locally
-
-```bash
+6. Run locally
 uvicorn main:app --reload
-```
 
-The application will be available at:
+The application will be available at http://localhost:8000.
 
-```text
-http://localhost:8000
-```
-
-## Docker
-
-The application is containerized using Docker.
-
-### Build the Docker image
-
-```bash
+Docker
+Build the image
 docker build -t ai-research-assistant .
-```
-
-### Run the container
-
-```bash
+Run the container
 docker run --env-file .env -p 8000:8000 ai-research-assistant
-```
 
-The application will then be available at:
+The application will then be available at http://localhost:8000.
 
-```text
-http://localhost:8000
-```
+Research Workflow
+User submits a research query.
+The agent initiates a web search through Tavily.
+Relevant sources are collected and processed.
+The agent checks whether the sources are actually sufficient — if not, it runs a targeted follow-up search.
+Source content is summarized.
+Google Gemini analyzes the retrieved information.
+The findings are synthesized into a structured, citation-grounded report.
+What I'd Improve Next
+Swap keyword-based retrieval for a real vector store (Pinecone or pgvector) with proper embeddings — turning this into a full RAG pipeline
+Add streaming responses to cut perceived latency below the current 18–19s
+Add automated citation-accuracy testing instead of manual spot checks
+Add conversation memory across queries
+Deploy the containerized app to a cloud platform
+Security
+API keys are stored in environment variables
+.env is excluded from version control
+Local cache files are excluded from the Docker build context
+Secrets are never hardcoded or committed to the repository
+Author
 
-## Research Workflow
+Mariam Zehra — Computer Science Student | AI/ML | Python
+ 
 
-1. User submits a research query.
-2. The agent initiates a web search through Tavily.
-3. Relevant sources are collected and processed.
-4. Source content is summarized.
-5. Google Gemini analyzes the retrieved information.
-6. The findings are synthesized into a structured report.
-7. Retrieved sources are included to support the generated research.
-
-## Security
-
-* API keys are stored in environment variables.
-* `.env` is excluded from version control.
-* Local cache files are excluded from the Docker build context.
-* Secrets should never be hardcoded or committed to the repository.
-
-## Future Improvements
-
-* Add conversation memory
-* Improve source ranking and relevance filtering
-* Add additional research agents
-* Add streaming responses
-* Improve report formatting
-* Deploy the containerized application to a cloud platform
-* Add automated testing and CI/CD
-
-## Author
-
-**Mariam Zehra**
-Computer Science Student | AI/ML | Python
+ 
  
 
    
