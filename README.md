@@ -159,15 +159,6 @@ http://localhost:8000
 6. The findings are synthesized into a structured report.
 7. Retrieved sources are included to support the generated research.
 
-## Use Cases
-
-* Research assistance
-* Technical research
-* Topic exploration
-* Information synthesis
-* Source-grounded AI responses
-* Automated research reporting
-
 ## Security
 
 * API keys are stored in environment variables.
