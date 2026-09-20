@@ -1,9 +1,6 @@
  ![AI Research Assistant Demo](screenshots/research-demo.png)
 
-Here it is in a plain code block so the `#` symbols copy over exactly as typed — select all inside the box and copy directly from here, don't retype it:
-
-```markdown
-# AI Research Assistant (Sift)
+ # AI Research Assistant (Sift)
 
 Most "AI research assistant" projects generate a confident-sounding answer whether or not they actually found good evidence for it. This one doesn't — it checks its own sources before writing anything, and it goes back to search again if what it found isn't good enough.
 
@@ -38,27 +35,25 @@ The follow-up search rate matters most here — on two out of three tested topic
 
 ## Architecture
 
-```
 User Query
-    ↓
+↓
 FastAPI
-    ↓
+↓
 Agent Loop
-    ↓
+↓
 Tavily Web Search
-    ↓
+↓
 Source Sufficiency Check ──[insufficient]──▶ Follow-up Search
-    │
-  [sufficient]
-    ↓
+│
+[sufficient]
+↓
 Source Summarization
-    ↓
+↓
 Google Gemini
-    ↓
+↓
 Research Synthesis
-    ↓
+↓
 Citation-Grounded Report
-```
 
 ## Tech Stack
 
@@ -73,7 +68,6 @@ Citation-Grounded Report
 
 ## Project Structure
 
-```
 AI-research-assistant/
 │
 ├── agent_loop.py
@@ -88,73 +82,51 @@ AI-research-assistant/
 ├── .dockerignore
 ├── .gitignore
 └── README.md
-```
+
 
 ## Setup
 
 ### 1. Clone the repository
-
-```
 git clone https://github.com/mariumzehramehdi-stack/AI-research-assistant.git
 cd AI-research-assistant
-```
 
 ### 2. Create a virtual environment
-
-```
 python -m venv venv
-```
+
 
 ### 3. Activate the environment
 
 **Windows:**
-```
 venv\Scripts\activate
-```
 
 **macOS/Linux:**
-```
 source venv/bin/activate
-```
 
 ### 4. Install dependencies
-
-```
 pip install -r requirements.txt
-```
+
 
 ### 5. Configure environment variables
 
 Create a `.env` file in the project root:
-
-```
 GEMINI_API_KEY=your_gemini_api_key
 TAVILY_API_KEY=your_tavily_api_key
-```
 
 Never commit API keys or `.env` files to the repository.
 
 ### 6. Run locally
-
-```
 uvicorn main:app --reload
-```
 
 The application will be available at `http://localhost:8000`.
 
 ## Docker
 
 ### Build the image
-
-```
 docker build -t ai-research-assistant .
-```
 
 ### Run the container
-
-```
 docker run --env-file .env -p 8000:8000 ai-research-assistant
-```
+
 
 The application will then be available at `http://localhost:8000`.
 
@@ -186,8 +158,6 @@ The application will then be available at `http://localhost:8000`.
 ## Author
 
 **Mariam Zehra** — Computer Science Student | AI/ML | Python
-```
 
-When you paste this into GitHub's README editor, paste it into the **plain text edit box** (the pencil icon, not the preview pane), and don't retype anything by hand — copying straight from this code block should keep every `#`, `-`, `|`, and backtick intact.
 
    
