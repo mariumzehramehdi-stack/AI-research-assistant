@@ -35,25 +35,13 @@ The follow-up search rate matters most here — on two out of three tested topic
 
 ## Architecture
 
-User Query
-↓
-FastAPI
-↓
-Agent Loop
-↓
-Tavily Web Search
-↓
-Source Sufficiency Check ──[insufficient]──▶ Follow-up Search
-│
-[sufficient]
-↓
-Source Summarization
-↓
-Google Gemini
-↓
-Research Synthesis
-↓
-Citation-Grounded Report
+query → search (Tavily) → enough sources?
+                              │
+                    no ──────┘──────► search again
+                              │
+                             yes
+                              ↓
+                    summarize → Gemini → report
 
 ## Tech Stack
 
